@@ -1,217 +1,1890 @@
 {
-  "openapi": "3.1.0",
+  "x-generator": "NSwag v13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "swagger": "2.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
+    "title": "Accounts Service",
+    "description": "Service for managing Physical and Virtual Accounts.",
+    "contact": {
+      "name": "Methodic",
+      "url": "https://www.methodic.com",
+      "email": "info@methodic.com"
     },
-    "version": "1.0.0"
+    "version": "v1"
   },
-  "servers": [
-    {
-      "url": "http://sandbox.mintlify.com"
-    }
+  "host": "accounts.brenda.meth.wtf",
+  "schemes": [
+    "https"
   ],
-  "security": [
-    {
-      "bearerAuth": []
-    }
+  "consumes": [
+    "application/json"
   ],
   "paths": {
-    "/plants": {
+    "/health": {
       "get": {
-        "description": "Returns all plants from the system that the user has access to",
+        "tags": [
+          "Health"
+        ],
+        "summary": "Basic ping health endpoint",
+        "operationId": "Health_Health",
+        "responses": {
+          "409": {
+            "description": "Business Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "description": "Unhandled Internal Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/Physical": {
+      "post": {
+        "tags": [
+          "Physical"
+        ],
+        "summary": "Creates physical account (admin only)",
+        "operationId": "CreatePhysicalAccount",
+        "produces": [
+          "application/json; v=1.0"
+        ],
         "parameters": [
           {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
+            "name": "request",
+            "in": "body",
+            "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+              "$ref": "#/definitions/PhysicalAccountCreationRequest"
+            },
+            "x-nullable": false
           }
         ],
         "responses": {
-          "200": {
-            "description": "Plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
-                }
-              }
+          "409": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "description": "Unhandled Internal Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "401": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "201": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/PhysicalAccount"
             }
           },
           "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
             }
           }
         }
       },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
+      "get": {
+        "tags": [
+          "Physical"
+        ],
+        "summary": "Gets physical account by account filter",
+        "operationId": "GetPhysicalAccountsByAccountFilter",
+        "produces": [
+          "application/json; v=1.0"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "AccountName",
+            "in": "query",
+            "description": "The name of the account\n            ",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "AccountNumber",
+            "in": "query",
+            "description": "The account number\n            ",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "BankCode",
+            "in": "query",
+            "description": "The Bank Identification Code (BIC) of the institution providing the account\n            ",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "BranchCode",
+            "in": "query",
+            "description": "The branch code of the institution providing the account\n            ",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "SWIFTCode",
+            "in": "query",
+            "description": "The SWIFT code of the institution providing the account\n            ",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "BIC",
+            "in": "query",
+            "description": "The Bank Identification Code (BIC)/SWIFT code of the institution providing the account   \n            ",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "Group",
+            "in": "query",
+            "description": "Any free-form grouping of accounts\n            ",
+            "x-nullable": true
+          },
+          {
+            "type": "array",
+            "name": "ProductIds",
+            "in": "query",
+            "description": "The primary ID of the product associated to the account\n            ",
+            "collectionFormat": "multi",
+            "x-nullable": true,
+            "items": {
+              "type": "string",
+              "format": "guid"
             }
           },
-          "required": true
-        },
+          {
+            "type": "string",
+            "name": "ProviderId",
+            "in": "query",
+            "description": "The ID of the provider associated to the account\n            ",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "ExternalId",
+            "in": "query",
+            "description": "The unique identifier of the account at the external counter-party who provides it\n            ",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "ProviderType",
+            "in": "query",
+            "description": "The type of provider associated to the account\n            ",
+            "x-schema": {
+              "$ref": "#/definitions/ProviderType"
+            },
+            "x-nullable": true,
+            "enum": [
+              "Bank",
+              "Broking",
+              "Custody",
+              "Ev",
+              "Fx",
+              "Payment",
+              "Pricing"
+            ]
+          },
+          {
+            "type": "string",
+            "name": "ExternalReference",
+            "in": "query",
+            "description": "A human-readable account reference provided by an external counter-party\n            ",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "AccountStatus",
+            "in": "query",
+            "description": "The status of the account\n            ",
+            "x-schema": {
+              "$ref": "#/definitions/AccountStatus"
+            },
+            "x-nullable": true,
+            "enum": [
+              "Undefined",
+              "Pending",
+              "Active",
+              "Declined",
+              "Activating"
+            ]
+          },
+          {
+            "type": "string",
+            "name": "InvestorId",
+            "in": "query",
+            "description": "The identifier of the Investor that owns this account, if this is an Investor Account",
+            "format": "guid",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "AccountType",
+            "in": "query",
+            "description": "The type or purpose of the account.",
+            "x-schema": {
+              "$ref": "#/definitions/PhysicalAccountType"
+            },
+            "x-nullable": true,
+            "enum": [
+              "Undefined",
+              "Omnibus",
+              "Clearing",
+              "Investor"
+            ]
+          },
+          {
+            "type": "string",
+            "name": "CreatedUTCDateTimeOnOrAfter",
+            "in": "query",
+            "description": "Select only those Accounts Created on or after a particular point in time\nUse in conjunction with CreatedUTCDateTimeOnOrBefore to filter a range of dates",
+            "format": "date-time",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "CreatedUTCDateTimeOnOrBefore",
+            "in": "query",
+            "description": "Select only those Accounts Created on or before a particular point in time\nUse in conjunction with CreatedUTCDateTimeOnOrAfter to filter a range of dates",
+            "format": "date-time",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "NameContains",
+            "in": "query",
+            "description": "Filter for accounts whose name contains this value\n            ",
+            "x-nullable": true
+          },
+          {
+            "type": "integer",
+            "name": "pageNumber",
+            "in": "query",
+            "description": "The desired page of results (first page = 1)",
+            "format": "int32",
+            "x-nullable": true
+          },
+          {
+            "type": "integer",
+            "name": "pageSize",
+            "in": "query",
+            "description": "The desired number of results per page",
+            "format": "int32",
+            "x-nullable": true
+          }
+        ],
         "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
+          "409": {
+            "description": "Business Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
             }
           },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
+          "500": {
+            "description": "Unhandled Internal Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "401": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/PaginatedEnumerableOfPhysicalAccount"
             }
           }
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+    "/Physical/{id}": {
+      "get": {
+        "tags": [
+          "Physical"
+        ],
+        "summary": "Gets physical account by id",
+        "operationId": "GetPhysicalAccountById",
+        "produces": [
+          "application/json; v=1.0"
+        ],
         "parameters": [
           {
+            "type": "string",
             "name": "id",
             "in": "path",
-            "description": "ID of plant to delete",
             "required": true,
+            "description": "A guid uniquely identifying the physical account",
+            "format": "guid",
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "409": {
+            "description": "Business Error",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "$ref": "#/definitions/ProblemDetails"
             }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
           },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
+          "500": {
+            "description": "Unhandled Internal Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
             }
-          }
-        }
-      }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
-        "requestBody": {
-          "description": "Plant added to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
+          },
+          "401": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
             }
-          }
-        },
-        "responses": {
+          },
           "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/PhysicalAccount"
+            }
           }
         }
       },
-      "NewPlant": {
-        "allOf": [
+      "patch": {
+        "tags": [
+          "Physical"
+        ],
+        "summary": "Updates a physical account",
+        "operationId": "UpdatePhysicalAccount",
+        "produces": [
+          "application/json; v=1.0"
+        ],
+        "parameters": [
           {
-            "$ref": "#/components/schemas/Plant"
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "description": "A set of account details to be used for the update. Only include the parameters you wish to change and delete the others",
+            "schema": {
+              "$ref": "#/definitions/PhysicalAccountModificationRequest"
+            },
+            "x-nullable": false
           },
           {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
+            "type": "string",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "A guid uniquely identifying the physical account",
+            "format": "guid",
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "409": {
+            "description": "Business Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
             }
+          },
+          "500": {
+            "description": "Unhandled Internal Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "401": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/PhysicalAccount"
+            }
+          },
+          "404": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/Virtual": {
+      "post": {
+        "tags": [
+          "Virtual"
+        ],
+        "summary": "Creates a virtual account (admin only).",
+        "operationId": "CreateVirtualAccount",
+        "produces": [
+          "application/json; v=1.0"
+        ],
+        "parameters": [
+          {
+            "name": "accountRequest",
+            "in": "body",
+            "required": true,
+            "description": "A set of required account data used for creation.",
+            "schema": {
+              "$ref": "#/definitions/VirtualAccountCreationRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "409": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "description": "Unhandled Internal Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "401": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/VirtualAccount"
+            }
+          },
+          "201": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/VirtualAccount"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Virtual"
+        ],
+        "summary": "Gets virtual accounts by account filter.",
+        "operationId": "GetVirtualAccountsByAccountFilter",
+        "produces": [
+          "application/json; v=1.0"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "PhysicalId",
+            "in": "query",
+            "description": "The primary ID of the parent physical account\n            ",
+            "format": "guid",
+            "x-nullable": true
+          },
+          {
+            "type": "array",
+            "name": "PhysicalIds",
+            "in": "query",
+            "description": "The primary IDs of the parent physical account\n            ",
+            "collectionFormat": "multi",
+            "x-nullable": true,
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
+          },
+          {
+            "type": "string",
+            "name": "InvestorId",
+            "in": "query",
+            "description": "The primary ID of an owner of a virtual account. Mutually exclusive with InvestorIds.\n            ",
+            "format": "guid",
+            "x-nullable": true
+          },
+          {
+            "type": "array",
+            "name": "InvestorIds",
+            "in": "query",
+            "description": "The primary IDs of any owners of a virtual account\n            ",
+            "collectionFormat": "multi",
+            "x-nullable": true,
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
+          },
+          {
+            "type": "array",
+            "name": "VirtualAccountIds",
+            "in": "query",
+            "description": "List of IDs of virtual accounts being requested\n            ",
+            "collectionFormat": "multi",
+            "x-nullable": true,
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
+          },
+          {
+            "type": "string",
+            "name": "ProductId",
+            "in": "query",
+            "description": "The primary ID of the product associated to a virtual account's physical account\n            ",
+            "format": "guid",
+            "x-nullable": true
+          },
+          {
+            "type": "array",
+            "name": "ProductIds",
+            "in": "query",
+            "description": "The primary ID of the product associated to a virtual account's physical account\n            ",
+            "collectionFormat": "multi",
+            "x-nullable": true,
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
+          },
+          {
+            "type": "string",
+            "name": "ProviderId",
+            "in": "query",
+            "description": "The ID of the provider associated to a virtual account's physical account\n            ",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "AccountType",
+            "in": "query",
+            "description": "The Account Type\n            ",
+            "x-schema": {
+              "$ref": "#/definitions/VirtualAccountType"
+            },
+            "x-nullable": true,
+            "enum": [
+              "Undefined",
+              "IndividualTrader",
+              "TradingAdvisor",
+              "IntroducingBroker",
+              "Custodial",
+              "Beneficiary",
+              "Institutional",
+              "Company",
+              "Investor",
+              "Operational",
+              "Receivables",
+              "Margin",
+              "Payables",
+              "OutgoingOrders",
+              "IncomingOrders",
+              "BuyingPower",
+              "DelinquentReceivables",
+              "OutgoingFx",
+              "IncomingFx",
+              "Clearing",
+              "IncomingTransfers",
+              "OutgoingTransfers",
+              "FeeIncome",
+              "UnallocatedCAReceipts",
+              "UnallocatedCAWithdrawals",
+              "Float",
+              "FloatLoan",
+              "FundedTransfers",
+              "FeeExpense",
+              "Withholding",
+              "Suspense",
+              "Interest",
+              "InterestIncome",
+              "InterestExpense",
+              "TaxWithheld",
+              "Portfolio"
+            ]
+          },
+          {
+            "type": "string",
+            "name": "ProviderType",
+            "in": "query",
+            "description": "The provider type\n            ",
+            "x-schema": {
+              "$ref": "#/definitions/ProviderType"
+            },
+            "x-nullable": true,
+            "enum": [
+              "Bank",
+              "Broking",
+              "Custody",
+              "Ev",
+              "Fx",
+              "Payment",
+              "Pricing"
+            ]
+          },
+          {
+            "type": "string",
+            "name": "AccountStatus",
+            "in": "query",
+            "description": "The status of the account, for backward compatibility if not specified, the system assumes Active Accounts only. \n            ",
+            "x-schema": {
+              "$ref": "#/definitions/VirtualAccountStatus"
+            },
+            "x-nullable": true,
+            "enum": [
+              "Undefined",
+              "Active",
+              "Suspended"
+            ]
+          },
+          {
+            "type": "string",
+            "name": "ExternalReference",
+            "in": "query",
+            "description": "Reference to be used by Investors when making deposits etc.",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "ExternalAccountNumber",
+            "in": "query",
+            "description": "Account Number to be used by Investors when making deposits etc.\n            ",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "NameContains",
+            "in": "query",
+            "description": "Filter for accounts whose name contains this value.\n            ",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "NameIsExactly",
+            "in": "query",
+            "description": "Filter for accounts whose name matches the suppliced value exactly.\n            ",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "CreatedUTCDateTimeOnOrAfter",
+            "in": "query",
+            "description": "Select only those Accounts Created on or after a particular point in time\nUse in conjunction with CreatedUTCDateTimeOnOrBefore to filter a range of dates",
+            "format": "date-time",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "CreatedUTCDateTimeOnOrBefore",
+            "in": "query",
+            "description": "Select only those Accounts Created on or before a particular point in time\nUse in conjunction with CreatedUTCDateTimeOnOrAfter to filter a range of dates",
+            "format": "date-time",
+            "x-nullable": true
+          },
+          {
+            "type": "integer",
+            "name": "pageNumber",
+            "in": "query",
+            "description": "The desired page of results (first page = 1)",
+            "format": "int32",
+            "x-nullable": true
+          },
+          {
+            "type": "integer",
+            "name": "pageSize",
+            "in": "query",
+            "description": "The desired number of results per page",
+            "format": "int32",
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "409": {
+            "description": "Business Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "description": "Unhandled Internal Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "401": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/PaginatedEnumerableOfVirtualAccount"
+            }
+          }
+        }
+      }
+    },
+    "/Virtual/{id}": {
+      "get": {
+        "tags": [
+          "Virtual"
+        ],
+        "summary": "Gets a virtual account by its identifier.",
+        "operationId": "GetVirtualAccountById",
+        "produces": [
+          "application/json; v=1.0"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "A unique identifier of the virtual account.",
+            "format": "guid",
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "409": {
+            "description": "Business Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "description": "Unhandled Internal Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "401": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/VirtualAccount"
+            }
+          },
+          "404": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Virtual"
+        ],
+        "summary": "Updates a virtual account.",
+        "operationId": "UpdateVirtualAccount",
+        "produces": [
+          "application/json; v=1.0"
+        ],
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "description": "A set of account details to be used for the update. Only include the parameters you wish to change and delete the others",
+            "schema": {
+              "$ref": "#/definitions/VirtualAccountModificationRequest"
+            },
+            "x-nullable": false
+          },
+          {
+            "type": "string",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "A unique identifier of the virtual account.",
+            "format": "guid",
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "409": {
+            "description": "Business Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "description": "Unhandled Internal Error",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "401": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/VirtualAccount"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "404": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AccountingPurpose": {
+      "type": "string",
+      "description": "\r\n\r\nPossible values:\r\nUndefined\nAssets\nContraAssets\nCapital\nDrawings\nExpenses\nIncome\nLiabilities\nContraLiabilities",
+      "x-enumNames": [
+        "Undefined",
+        "Assets",
+        "ContraAssets",
+        "Capital",
+        "Drawings",
+        "Expenses",
+        "Income",
+        "Liabilities",
+        "ContraLiabilities"
+      ],
+      "enum": [
+        "Undefined",
+        "Assets",
+        "ContraAssets",
+        "Capital",
+        "Drawings",
+        "Expenses",
+        "Income",
+        "Liabilities",
+        "ContraLiabilities"
+      ]
+    },
+    "AccountStatus": {
+      "type": "string",
+      "description": "The status of an account\r\n\r\nPossible values:\r\nUndefined (The account is in an unknown state)\nPending (The account is awaiting activation)\nActive (The account is active)\nDeclined (The account could not be activated)\nActivating (The account is currently in the process of being activated at a 3rd party)",
+      "x-enumNames": [
+        "Undefined",
+        "Pending",
+        "Active",
+        "Declined",
+        "Activating"
+      ],
+      "enum": [
+        "Undefined",
+        "Pending",
+        "Active",
+        "Declined",
+        "Activating"
+      ]
+    },
+    "CurrencyCode": {
+      "type": "string",
+      "description": "\r\n\r\nPossible values:\r\nXXX\nXTS\nAED\nAFN\nALL\nAMD\nARS\nAUD\nAZN\nBAM\nBDT\nBGN\nBHD\nBND\nBOB\nBRL\nBTN\nBWP\nBYN\nBZD\nCAD\nCDF\nCHF\nCLP\nCNY\nCOP\nCRC\nCUP\nCZK\nDJF\nDKK\nDOP\nDZD\nEGP\nERN\nETB\nEUR\nGBP\nGEL\nGTQ\nHKD\nHNL\nHRK\nHTG\nHUF\nIDR\nILS\nINR\nIQD\nIRR\nISK\nJMD\nJOD\nJPY\nKES\nKGS\nKHR\nKRW\nKWD\nKZT\nLAK\nLBP\nLKR\nLYD\nMAD\nMDL\nMKD\nMMK\nMNT\nMOP\nMVR\nMXN\nMYR\nNGN\nNIO\nNOK\nNPR\nNZD\nOMR\nPAB\nPEN\nPHP\nPKR\nPLN\nPYG\nQAR\nRON\nRSD\nRUB\nRWF\nSAR\nSEK\nSGD\nSOS\nSYP\nTHB\nTJS\nTMT\nTND\nTRY\nTTD\nTWD\nUAH\nUSD\nUYU\nUZS\nVES\nVND\nXAF\nXCD\nXDR\nXOF\nYER\nZAR",
+      "x-enumNames": [
+        "XXX",
+        "XTS",
+        "AED",
+        "AFN",
+        "ALL",
+        "AMD",
+        "ARS",
+        "AUD",
+        "AZN",
+        "BAM",
+        "BDT",
+        "BGN",
+        "BHD",
+        "BND",
+        "BOB",
+        "BRL",
+        "BTN",
+        "BWP",
+        "BYN",
+        "BZD",
+        "CAD",
+        "CDF",
+        "CHF",
+        "CLP",
+        "CNY",
+        "COP",
+        "CRC",
+        "CUP",
+        "CZK",
+        "DJF",
+        "DKK",
+        "DOP",
+        "DZD",
+        "EGP",
+        "ERN",
+        "ETB",
+        "EUR",
+        "GBP",
+        "GEL",
+        "GTQ",
+        "HKD",
+        "HNL",
+        "HRK",
+        "HTG",
+        "HUF",
+        "IDR",
+        "ILS",
+        "INR",
+        "IQD",
+        "IRR",
+        "ISK",
+        "JMD",
+        "JOD",
+        "JPY",
+        "KES",
+        "KGS",
+        "KHR",
+        "KRW",
+        "KWD",
+        "KZT",
+        "LAK",
+        "LBP",
+        "LKR",
+        "LYD",
+        "MAD",
+        "MDL",
+        "MKD",
+        "MMK",
+        "MNT",
+        "MOP",
+        "MVR",
+        "MXN",
+        "MYR",
+        "NGN",
+        "NIO",
+        "NOK",
+        "NPR",
+        "NZD",
+        "OMR",
+        "PAB",
+        "PEN",
+        "PHP",
+        "PKR",
+        "PLN",
+        "PYG",
+        "QAR",
+        "RON",
+        "RSD",
+        "RUB",
+        "RWF",
+        "SAR",
+        "SEK",
+        "SGD",
+        "SOS",
+        "SYP",
+        "THB",
+        "TJS",
+        "TMT",
+        "TND",
+        "TRY",
+        "TTD",
+        "TWD",
+        "UAH",
+        "USD",
+        "UYU",
+        "UZS",
+        "VES",
+        "VND",
+        "XAF",
+        "XCD",
+        "XDR",
+        "XOF",
+        "YER",
+        "ZAR"
+      ],
+      "enum": [
+        "XXX",
+        "XTS",
+        "AED",
+        "AFN",
+        "ALL",
+        "AMD",
+        "ARS",
+        "AUD",
+        "AZN",
+        "BAM",
+        "BDT",
+        "BGN",
+        "BHD",
+        "BND",
+        "BOB",
+        "BRL",
+        "BTN",
+        "BWP",
+        "BYN",
+        "BZD",
+        "CAD",
+        "CDF",
+        "CHF",
+        "CLP",
+        "CNY",
+        "COP",
+        "CRC",
+        "CUP",
+        "CZK",
+        "DJF",
+        "DKK",
+        "DOP",
+        "DZD",
+        "EGP",
+        "ERN",
+        "ETB",
+        "EUR",
+        "GBP",
+        "GEL",
+        "GTQ",
+        "HKD",
+        "HNL",
+        "HRK",
+        "HTG",
+        "HUF",
+        "IDR",
+        "ILS",
+        "INR",
+        "IQD",
+        "IRR",
+        "ISK",
+        "JMD",
+        "JOD",
+        "JPY",
+        "KES",
+        "KGS",
+        "KHR",
+        "KRW",
+        "KWD",
+        "KZT",
+        "LAK",
+        "LBP",
+        "LKR",
+        "LYD",
+        "MAD",
+        "MDL",
+        "MKD",
+        "MMK",
+        "MNT",
+        "MOP",
+        "MVR",
+        "MXN",
+        "MYR",
+        "NGN",
+        "NIO",
+        "NOK",
+        "NPR",
+        "NZD",
+        "OMR",
+        "PAB",
+        "PEN",
+        "PHP",
+        "PKR",
+        "PLN",
+        "PYG",
+        "QAR",
+        "RON",
+        "RSD",
+        "RUB",
+        "RWF",
+        "SAR",
+        "SEK",
+        "SGD",
+        "SOS",
+        "SYP",
+        "THB",
+        "TJS",
+        "TMT",
+        "TND",
+        "TRY",
+        "TTD",
+        "TWD",
+        "UAH",
+        "USD",
+        "UYU",
+        "UZS",
+        "VES",
+        "VND",
+        "XAF",
+        "XCD",
+        "XDR",
+        "XOF",
+        "YER",
+        "ZAR"
+      ]
+    },
+    "PaginatedEnumerableOfPhysicalAccount": {
+      "type": "object",
+      "required": [
+        "currentPage",
+        "totalCount",
+        "items"
+      ],
+      "properties": {
+        "currentPage": {
+          "$ref": "#/definitions/PaginatedEnumerablePage"
+        },
+        "totalCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PhysicalAccount"
+          }
+        }
+      }
+    },
+    "PaginatedEnumerableOfVirtualAccount": {
+      "type": "object",
+      "required": [
+        "currentPage",
+        "totalCount",
+        "items"
+      ],
+      "properties": {
+        "currentPage": {
+          "$ref": "#/definitions/PaginatedEnumerablePage"
+        },
+        "totalCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VirtualAccount"
+          }
+        }
+      }
+    },
+    "PaginatedEnumerablePage": {
+      "type": "object",
+      "required": [
+        "number",
+        "size"
+      ],
+      "properties": {
+        "number": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "PhysicalAccount": {
+      "type": "object",
+      "description": "A single real-world account.",
+      "required": [
+        "name",
+        "externalId",
+        "accountStatus",
+        "identifier",
+        "productId",
+        "providerId",
+        "providerType",
+        "accountType",
+        "tenantId",
+        "createdUTCDateTime"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the account\n            ",
+          "minLength": 1
+        },
+        "group": {
+          "type": "string",
+          "description": "Any free-form grouping of accounts\n            "
+        },
+        "externalId": {
+          "type": "string",
+          "description": "The unique identifier of the account at the external counter-party who provides it\n            "
+        },
+        "externalReference": {
+          "type": "string",
+          "description": "A human-readable account reference provided by an external counter-party\n            "
+        },
+        "accountNumber": {
+          "type": "string",
+          "description": "The account number\n            "
+        },
+        "bic": {
+          "type": "string",
+          "description": "The Bank Identification Code (BIC)/SWIFT code of the institution providing the account   \n            "
+        },
+        "branchCode": {
+          "type": "string",
+          "description": "The branch code of the institution providing the account.      \n            "
+        },
+        "swiftCode": {
+          "type": "string",
+          "description": "The SWIFT code of the institution providing the account\n            "
+        },
+        "accountStatus": {
+          "description": "The status of the account\n            ",
+          "allOf": [
+            {
+              "$ref": "#/definitions/AccountStatus"
+            }
+          ]
+        },
+        "statusInformation": {
+          "type": "string",
+          "description": "Any extra information for the current status of the account\n            "
+        },
+        "identifier": {
+          "type": "string",
+          "description": "The primary ID of the physical account\n            ",
+          "format": "guid"
+        },
+        "productId": {
+          "type": "string",
+          "description": "The primary ID of the product the account is used for\n            ",
+          "format": "guid",
+          "minLength": 1
+        },
+        "providerId": {
+          "description": "The ID of the Methodic provider which interacts with the account\n            ",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ProviderId"
+            }
+          ]
+        },
+        "providerType": {
+          "description": "The type of the Methodic provider which interacts with the account\n            ",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ProviderType"
+            }
+          ]
+        },
+        "investorId": {
+          "type": "string",
+          "description": "The identifier of the Investor that owns this account, if this is an Investor Account\n            ",
+          "format": "guid"
+        },
+        "accountType": {
+          "description": "The type or purpose of the account.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PhysicalAccountType"
+            }
+          ]
+        },
+        "tenantId": {
+          "type": "string",
+          "description": "The primary ID of the tenant the account is used for\n            ",
+          "format": "guid",
+          "minLength": 1
+        },
+        "defaultCurrency": {
+          "description": "The default currency for the account, used to specify cash transactions when the provider does not indicate the currency explictly\n            ",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CurrencyCode"
+            }
+          ]
+        },
+        "createdUTCDateTime": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "PhysicalAccountCreationRequest": {
+      "type": "object",
+      "description": "Information required to create a new physical account\n            ",
+      "required": [
+        "name",
+        "productId",
+        "externalId",
+        "providerId",
+        "providerType",
+        "accountStatus",
+        "accountType",
+        "tenantId"
+      ],
+      "properties": {
+        "group": {
+          "type": "string",
+          "description": "Any free-form grouping of accounts\n            "
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the account\n            ",
+          "minLength": 1
+        },
+        "productId": {
+          "type": "string",
+          "description": "The primary ID of the product the account is used for\n            ",
+          "format": "guid",
+          "minLength": 1
+        },
+        "externalReference": {
+          "type": "string",
+          "description": "A human-readable account reference provided by an external counter-party\n            "
+        },
+        "externalId": {
+          "type": "string",
+          "description": "The unique identifier of the account at the external counter-party who provides it\n            ",
+          "minLength": 1
+        },
+        "providerId": {
+          "type": "string",
+          "description": "The ID of the Methodic provider which interacts with the account\n            "
+        },
+        "providerType": {
+          "description": "The type of the Methodic provider which interacts with the account\n            ",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ProviderType"
+            }
+          ]
+        },
+        "accountNumber": {
+          "type": "string",
+          "description": "The account number\n            "
+        },
+        "bankCode": {
+          "type": "string",
+          "description": "The Bank Code of the institution providing the account   \n            "
+        },
+        "bic": {
+          "type": "string",
+          "description": "The Bank Identification Code (BIC)/SWIFT code of the institution providing the account   \n            "
+        },
+        "branchCode": {
+          "type": "string",
+          "description": "The branch code of the institution providing the account.      \n            "
+        },
+        "accountStatus": {
+          "description": "The status of the account\n            ",
+          "allOf": [
+            {
+              "$ref": "#/definitions/AccountStatus"
+            }
+          ]
+        },
+        "statusInformation": {
+          "type": "string",
+          "description": "Any extra information for the current status of the account\n            "
+        },
+        "accountType": {
+          "description": "The type or purpose of the account.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PhysicalAccountType"
+            }
+          ]
+        },
+        "investorId": {
+          "type": "string",
+          "description": "The identifier of the Investor that owns this account, if this is an Investor Account",
+          "format": "guid"
+        },
+        "tenantId": {
+          "type": "string",
+          "description": "The primary ID of the Tenant the account is used for\n            ",
+          "format": "guid"
+        },
+        "defaultCurrency": {
+          "description": "The default currency for the account, used to specify cash transactions when the provider does not indicate the currency explictly\n            ",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CurrencyCode"
+            }
+          ]
+        }
+      }
+    },
+    "PhysicalAccountModificationRequest": {
+      "type": "object",
+      "description": "Information required to create a new physical account\n            ",
+      "properties": {
+        "group": {
+          "type": "string",
+          "description": "Any free-form grouping of accounts\n            "
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the account\n            "
+        },
+        "externalReference": {
+          "type": "string",
+          "description": "A human-readable account reference provided by an external counter-party\n            "
+        },
+        "externalId": {
+          "type": "string",
+          "description": "The unique identifier of the account at the external counter-party who provides it\n            "
+        },
+        "accountNumber": {
+          "type": "string",
+          "description": "The account number\n            "
+        },
+        "bic": {
+          "type": "string",
+          "description": "The Bank Identification Code (BIC)/SWIFT code of the institution providing the account   \n            "
+        },
+        "bankCode": {
+          "type": "string",
+          "description": "The Bank Identification Code (BIC) of the institution providing the account\nDeprecated as it is a duplicate of SWIFTCode, replaced with BIC     \n            "
+        },
+        "branchCode": {
+          "type": "string",
+          "description": "The branch code of the institution providing the account\n            "
+        },
+        "defaultCurrency": {
+          "description": "The default currency for the account, used to specify cash transactions when the provider does not indicate the currency explictly\n            ",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CurrencyCode"
+            }
+          ]
+        }
+      }
+    },
+    "PhysicalAccountType": {
+      "type": "string",
+      "description": "\r\n\r\nPossible values:\r\nUndefined\nOmnibus\nClearing\nInvestor",
+      "x-enumNames": [
+        "Undefined",
+        "Omnibus",
+        "Clearing",
+        "Investor"
+      ],
+      "enum": [
+        "Undefined",
+        "Omnibus",
+        "Clearing",
+        "Investor"
+      ]
+    },
+    "ProblemDetails": {
+      "title": "ProblemDetails",
+      "type": "object",
+      "additionalProperties": {
+        "additionalProperties": {
+
+        },
+        "oneOf": [
+          {
+            "additionalProperties": {
+
+            }
+          },
+          {
+            "type": "null"
           }
         ]
       },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
+      "properties": {
+        "type": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "title": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "status": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int32"
+        },
+        "detail": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "instance": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "extensions": {
+          "type": "object",
+          "readOnly": true,
+          "additionalProperties": {
+            "additionalProperties": {
+
+            }
           }
         }
       }
     },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+    "ProviderId": {
+      "type": "string",
+      "description": ""
+    },
+    "ProviderType": {
+      "type": "string",
+      "description": "\r\n\r\nPossible values:\r\nBank\nBroking\nCustody\nEv\nFx\nPayment\nPricing",
+      "x-enumNames": [
+        "Bank",
+        "Broking",
+        "Custody",
+        "Ev",
+        "Fx",
+        "Payment",
+        "Pricing"
+      ],
+      "enum": [
+        "Bank",
+        "Broking",
+        "Custody",
+        "Ev",
+        "Fx",
+        "Payment",
+        "Pricing"
+      ]
+    },
+    "VirtualAccount": {
+      "type": "object",
+      "description": "An account used to track cash flows for a specific purposes within a physical account.",
+      "required": [
+        "identifier",
+        "name",
+        "physicalAccountId",
+        "accountType",
+        "physicalAccount",
+        "accountingPurpose",
+        "virtualAccountStatus",
+        "createdUTCDateTime"
+      ],
+      "properties": {
+        "identifier": {
+          "type": "string",
+          "description": "The primary ID of the virtual account.",
+          "format": "guid",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the account.",
+          "minLength": 1
+        },
+        "investorId": {
+          "type": "string",
+          "description": "The primary ID of the investor who owns the account, if applicable.",
+          "format": "guid"
+        },
+        "physicalAccountId": {
+          "type": "string",
+          "description": "The primary ID of the parent physical account.",
+          "format": "guid",
+          "minLength": 1
+        },
+        "accountType": {
+          "description": "The type or purpose of the account.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/VirtualAccountType"
+            }
+          ]
+        },
+        "physicalAccount": {
+          "description": "The parent physical account associated with this virtual account.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PhysicalAccount"
+            }
+          ]
+        },
+        "accountingPurpose": {
+          "description": "Determines how the account is treated from an accounting perspective. E.g. Balance sheet vs Income statement and how a balance increase is effected.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/AccountingPurpose"
+            }
+          ]
+        },
+        "virtualAccountStatus": {
+          "description": "Dermines if the account is Active, Suspended etc.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/VirtualAccountStatus"
+            }
+          ]
+        },
+        "externalReference": {
+          "type": "string",
+          "description": "Reference to be used by Investors when making deposits etc."
+        },
+        "externalAccountNumber": {
+          "type": "string",
+          "description": "Account Number to be used by Investors when making deposits etc."
+        },
+        "createdUTCDateTime": {
+          "type": "string",
+          "format": "date-time"
+        }
       }
+    },
+    "VirtualAccountCreationRequest": {
+      "type": "object",
+      "description": "Data required to create a new virtual account\n            ",
+      "required": [
+        "physicalAccountId",
+        "accountType",
+        "accountStatus"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the account\n            ",
+          "maxLength": 512
+        },
+        "investorId": {
+          "type": "string",
+          "description": "The primary ID of the investor who owns the account\n            ",
+          "format": "guid"
+        },
+        "physicalAccountId": {
+          "type": "string",
+          "description": "The primary ID of the parent physical account\n            ",
+          "format": "guid"
+        },
+        "accountType": {
+          "description": "The account type\n            ",
+          "allOf": [
+            {
+              "$ref": "#/definitions/VirtualAccountType"
+            }
+          ]
+        },
+        "accountStatus": {
+          "$ref": "#/definitions/VirtualAccountStatus"
+        },
+        "externalReference": {
+          "type": "string",
+          "description": "Reference to be used by Investors when making deposits etc.",
+          "maxLength": 256
+        },
+        "externalAccountNumber": {
+          "type": "string",
+          "description": "Account Number to be used by Investors when making deposits etc.",
+          "maxLength": 256
+        }
+      }
+    },
+    "VirtualAccountModificationRequest": {
+      "type": "object",
+      "description": "Data used to update an existing account, supply values for those attributes you wish to update.\n            ",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the account\n            ",
+          "maxLength": 512
+        },
+        "accountStatus": {
+          "description": "The status of the account\n            ",
+          "maxLength": 256,
+          "allOf": [
+            {
+              "$ref": "#/definitions/VirtualAccountStatus"
+            }
+          ]
+        },
+        "externalReference": {
+          "type": "string",
+          "description": "Reference to be used by Investors when making deposits etc.",
+          "maxLength": 256
+        },
+        "externalAccountNumber": {
+          "type": "string",
+          "description": "Account Number to be used by Investors when making deposits etc."
+        }
+      }
+    },
+    "VirtualAccountStatus": {
+      "type": "string",
+      "description": "\r\n\r\nPossible values:\r\nUndefined\nActive\nSuspended",
+      "x-enumNames": [
+        "Undefined",
+        "Active",
+        "Suspended"
+      ],
+      "enum": [
+        "Undefined",
+        "Active",
+        "Suspended"
+      ]
+    },
+    "VirtualAccountType": {
+      "type": "string",
+      "description": "\r\n\r\nPossible values:\r\nUndefined\nIndividualTrader\nTradingAdvisor\nIntroducingBroker\nCustodial\nBeneficiary\nInstitutional\nCompany\nInvestor\nOperational\nReceivables\nMargin\nPayables\nOutgoingOrders\nIncomingOrders\nBuyingPower\nDelinquentReceivables\nOutgoingFx\nIncomingFx\nClearing\nIncomingTransfers\nOutgoingTransfers\nFeeIncome\nUnallocatedCAReceipts\nUnallocatedCAWithdrawals\nFloat\nFloatLoan\nFundedTransfers\nFeeExpense\nWithholding\nSuspense\nInterest\nInterestIncome\nInterestExpense\nTaxWithheld\nPortfolio",
+      "x-enumNames": [
+        "Undefined",
+        "IndividualTrader",
+        "TradingAdvisor",
+        "IntroducingBroker",
+        "Custodial",
+        "Beneficiary",
+        "Institutional",
+        "Company",
+        "Investor",
+        "Operational",
+        "Receivables",
+        "Margin",
+        "Payables",
+        "OutgoingOrders",
+        "IncomingOrders",
+        "BuyingPower",
+        "DelinquentReceivables",
+        "OutgoingFx",
+        "IncomingFx",
+        "Clearing",
+        "IncomingTransfers",
+        "OutgoingTransfers",
+        "FeeIncome",
+        "UnallocatedCAReceipts",
+        "UnallocatedCAWithdrawals",
+        "Float",
+        "FloatLoan",
+        "FundedTransfers",
+        "FeeExpense",
+        "Withholding",
+        "Suspense",
+        "Interest",
+        "InterestIncome",
+        "InterestExpense",
+        "TaxWithheld",
+        "Portfolio"
+      ],
+      "enum": [
+        "Undefined",
+        "IndividualTrader",
+        "TradingAdvisor",
+        "IntroducingBroker",
+        "Custodial",
+        "Beneficiary",
+        "Institutional",
+        "Company",
+        "Investor",
+        "Operational",
+        "Receivables",
+        "Margin",
+        "Payables",
+        "OutgoingOrders",
+        "IncomingOrders",
+        "BuyingPower",
+        "DelinquentReceivables",
+        "OutgoingFx",
+        "IncomingFx",
+        "Clearing",
+        "IncomingTransfers",
+        "OutgoingTransfers",
+        "FeeIncome",
+        "UnallocatedCAReceipts",
+        "UnallocatedCAWithdrawals",
+        "Float",
+        "FloatLoan",
+        "FundedTransfers",
+        "FeeExpense",
+        "Withholding",
+        "Suspense",
+        "Interest",
+        "InterestIncome",
+        "InterestExpense",
+        "TaxWithheld",
+        "Portfolio"
+      ]
     }
-  }
+  },
+  "securityDefinitions": {
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "implicit",
+      "authorizationUrl": "https://guard.brenda.meth.wtf/authorize"
+    }
+  },
+  "security": [
+    {
+      "oauth2": []
+    }
+  ]
 }
